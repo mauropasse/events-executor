@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include "rclcpp/executors/events_executor/events_executor.hpp"
 
@@ -60,6 +61,7 @@ EventsExecutorEntitiesCollector::~EventsExecutorEntitiesCollector()
     auto group = pair.first.lock();
     if (group) {
       auto & group_gc = pair.second;
+      std::cout << "weak_groups_to_guard_conditions_: unset_guard_condition_callback" << std::endl;
       unset_guard_condition_callback(group_gc);
     }
   }
@@ -70,6 +72,8 @@ EventsExecutorEntitiesCollector::~EventsExecutorEntitiesCollector()
   weak_subscriptions_map_.clear();
   weak_nodes_to_guard_conditions_.clear();
   weak_groups_to_guard_conditions_.clear();
+
+  std::cout << "~EventsExecutorEntitiesCollector - Callbacks invalid" << std::endl;
 }
 
 void
@@ -246,6 +250,7 @@ EventsExecutorEntitiesCollector::unset_callback_group_entities_callbacks(
   auto iter = weak_groups_to_guard_conditions_.find(group);
 
   if (iter != weak_groups_to_guard_conditions_.end()) {
+    std::cout << "unset_callback_group_entities_callbacks" << std::endl;
     unset_guard_condition_callback(iter->second);
   }
 
@@ -297,12 +302,16 @@ void
 EventsExecutorEntitiesCollector::set_guard_condition_callback(
   rclcpp::GuardCondition * guard_condition)
 {
+  std::cout << "EventsExecutorEntitiesCollector::set_guard_condition_callback"<< std::endl;
   auto gc_callback = [this](size_t num_events) {
       // Override num events (we don't care more than a single event)
       num_events = 1;
       int gc_id = -1;
+      std::cout << "push WAITABLE_EVENT into queue" ;
       ExecutorEvent event = {this, gc_id, ExecutorEventType::WAITABLE_EVENT, num_events};
+      std::cout << "- enqueue"<< std::endl;
       associated_executor_->events_queue_->enqueue(event);
+      std::cout << " Finished the enqueue"<< std::endl;
     };
 
   guard_condition->set_on_trigger_callback(gc_callback);
@@ -312,6 +321,7 @@ void
 EventsExecutorEntitiesCollector::unset_guard_condition_callback(
   rclcpp::GuardCondition * guard_condition)
 {
+  std::cout << "EventsExecutorEntitiesCollector::unset_guard_condition_callback"<< std::endl;
   guard_condition->set_on_trigger_callback(nullptr);
 }
 

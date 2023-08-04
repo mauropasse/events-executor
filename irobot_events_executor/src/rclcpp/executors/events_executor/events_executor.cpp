@@ -53,6 +53,7 @@ EventsExecutor::EventsExecutor(
 EventsExecutor::~EventsExecutor()
 {
   spinning.store(false);
+  std::cout << "~EventsExecutor()" << std::endl;
 }
 
 void
