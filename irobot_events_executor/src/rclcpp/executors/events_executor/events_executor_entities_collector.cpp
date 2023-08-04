@@ -128,6 +128,7 @@ EventsExecutorEntitiesCollector::callback_group_added_impl(
   if (iter != weak_groups_to_guard_conditions_.end()) {
     // Set an event callback for the group's notify guard condition, so if new entities are added
     // or removed to this node we will receive an event.
+    std::cout << "EventsExecutorEntitiesCollector::set_guard_condition_callback - callback_group_added_impl"<< std::endl;
     set_guard_condition_callback(iter->second);
   }
   // For all entities in the callback group, set their event callback
@@ -143,6 +144,7 @@ EventsExecutorEntitiesCollector::node_added_impl(
   auto notify_guard_condition = &(node->get_notify_guard_condition());
   // Set an event callback for the node's notify guard condition, so if new entities are added
   // or removed to this node we will receive an event.
+  std::cout << "EventsExecutorEntitiesCollector::set_guard_condition_callback - callback_group_added_impl"<< std::endl;
   set_guard_condition_callback(notify_guard_condition);
 
   // Store node's notify guard condition
@@ -166,6 +168,7 @@ EventsExecutorEntitiesCollector::node_removed_impl(
   // Node doesn't have more callback groups associated to the executor.
   // Unset the event callback for the node's notify guard condition, to stop
   // receiving events if entities are added or removed to this node.
+  std::cout << "EventsExecutorEntitiesCollector::unset_guard_condition_callback - node_removed_impl"<< std::endl;
   unset_guard_condition_callback(&(node->get_notify_guard_condition()));
 
   // Remove guard condition from list
