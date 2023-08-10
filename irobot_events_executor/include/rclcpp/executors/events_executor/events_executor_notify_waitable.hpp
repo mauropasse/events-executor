@@ -31,6 +31,7 @@ public:
   RCLCPP_PUBLIC
   virtual ~EventsExecutorNotifyWaitable()
   {
+    std::cout << "~EventsExecutorNotifyWaitable(): UNSET CALLBACKS TO GUARD CONDITIONS"<< std::endl;
     for (auto gc : notify_guard_conditions_) {
       gc->set_on_trigger_callback(nullptr);
     }
