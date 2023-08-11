@@ -15,6 +15,7 @@ TimersManager::TimersManager(
   std::shared_ptr<rclcpp::Context> context,
   std::function<void(void *)> on_ready_callback)
 {
+  std::cout << "TimersManager() - CONTSTRUCTOR" << std::endl;
   context_ = context;
   on_ready_callback_ = on_ready_callback;
 }
@@ -25,6 +26,7 @@ TimersManager::~TimersManager()
   this->clear();
 
   // Make sure timers thread is stopped before destroying this object
+  std::cout << "~TimersManager() - stop()" << std::endl;
   this->stop();
 }
 
@@ -69,6 +71,7 @@ void TimersManager::start()
 void TimersManager::stop()
 {
   // Lock stop() function to prevent race condition in destructor
+  std::cout << "TimersManager::stop() - Lock" << std::endl;
   rclcpp::Lock lock(stop_mutex_);
   running_ = false;
 

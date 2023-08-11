@@ -65,7 +65,14 @@ EventsExecutor::spin()
   RCPPUTILS_SCOPE_EXIT(this->spinning.store(false); );
 
   timers_manager_->start();
-  RCPPUTILS_SCOPE_EXIT(timers_manager_->stop(); );
+
+  // When this is called, the timers_manager_
+  // has already been destroyed!! So locking the mutex
+  // "stop_mutex_" will return an error code and will
+  // assert on "sync_primitives.hpp"
+  // Is not necessary since timers_manager_ will stop itself
+  // destructor
+  // RCPPUTILS_SCOPE_EXIT(timers_manager_->stop(); );
 
   while (rclcpp::ok(context_) && spinning.load()) {
     // Wait until we get an event

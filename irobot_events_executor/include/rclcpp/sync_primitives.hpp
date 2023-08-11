@@ -37,6 +37,7 @@ public:
 
   ~RecursiveMutex()
   {
+    std::cout << "~RecursiveMutex() - " << this << std::endl;
     int ret = pthread_mutex_destroy(&m_mutex);
     assert(ret == 0);
     (void)ret;
@@ -45,14 +46,27 @@ public:
   void lock()
   {
     int ret = pthread_mutex_lock(&m_mutex);
-    assert(ret == 0);
+
+    if(ret == 0) {std::cout << "pthread_mutex_lock: 0 - " << this << std::endl;}
+    if(ret == EINVAL) {std::cout << "pthread_mutex_lock: EINVAL - " << this << std::endl;}
+    if(ret == EBUSY) {std::cout << "pthread_mutex_lock: EBUSY - " << this << std::endl;}
+    if(ret == EAGAIN) {std::cout << "pthread_mutex_lock: EAGAIN - " << this << std::endl;}
+    if(ret == EDEADLK) {std::cout << "pthread_mutex_lock: EDEADLK - " << this << std::endl;}
+    if(ret == EPERM) {std::cout << "pthread_mutex_lock: EPERM - " << this << std::endl;}
+
     (void)ret;
   }
 
   void unlock()
   {
     int ret = pthread_mutex_unlock(&m_mutex);
-    assert(ret == 0);
+    if(ret == 0) {std::cout << "pthread_mutex_unlock: 0 - " << this << std::endl;}
+    if(ret == EINVAL) {std::cout << "pthread_mutex_unlock: EINVAL - " << this << std::endl;}
+    if(ret == EBUSY) {std::cout << "pthread_mutex_unlock: EBUSY - " << this << std::endl;}
+    if(ret == EAGAIN) {std::cout << "pthread_mutex_unlock: EAGAIN - " << this << std::endl;}
+    if(ret == EDEADLK) {std::cout << "pthread_mutex_unlock: EDEADLK - " << this << std::endl;}
+    if(ret == EPERM) {std::cout << "pthread_mutex_unlock: EPERM - " << this << std::endl;}
+
     (void)ret;
   }
 
